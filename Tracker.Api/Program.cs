@@ -35,13 +35,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     }));
 
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-builder.Services.AddScoped<IGenreRepository, GenreRepository>();
-builder.Services.AddScoped<IPersonManager, PersonManager>();
-builder.Services.AddScoped<IGenreManager, GenreManager>();
-builder.Services.AddScoped<IMovieManager, MovieManager>();
-
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleLocationRepository, VehicleLocationRepository>();
 builder.Services.AddScoped<IVehicleManager, VehicleManager>();
