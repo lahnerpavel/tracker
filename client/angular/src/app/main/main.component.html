@@ -1,0 +1,49 @@
+<div class="p-3 mb-3" style="border-bottom: 1px solid #eee;">
+
+    <div class="d-flex flex-row-reverse">
+
+        <button type="button" class="btn btn-danger btn-sm p-2" (click)="logOut()">
+            Odhlásit se
+        </button>
+        <p class="my-auto p-2">{{authService.isCurrentUserLoggedIn ? authService.currentUser.email : ''}}</p>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <ul class="nav nav-tabs ml-3">
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="/list/vehicles">Vozidla</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="/list/vehicles">Vozidla taky</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm">
+            <div class="btn-group float-right mr-3 mt-1">
+                <button type="button" class="btn btn-success btn-sm" (click)="isVehicleModalClosed = false">
+                    Přidat vozidlo
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="tab-content">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<app-modal header="Přidat vozidlo" [isClosed]="isVehicleModalClosed" (crossClicked)="isVehicleModalClosed = true">
+    <app-vehicle-modify></app-vehicle-modify>
+    <button footer type="button" class="btn btn-primary" (click)="addVehicle()">Uložit</button>
+    <button footer type="button" class="btn btn-secondary" (click)="isVehicleModalClosed = true">Zavřít</button>
+</app-modal>

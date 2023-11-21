@@ -1,0 +1,30 @@
+<div class="container py-4" style="min-height: 100vh;">
+    <form [formGroup]="registerForm" class="mx-auto" style="width: 300px;">
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input #email name="email" type="email" id="email" formControlName="email" class="form-control" placeholder="Zadejte e-mail" autocomplete="off">
+            <small *ngIf="registerForm.controls['email'].touched && !registerForm.controls['email'].valid" class="text-danger">
+                E-mail zadejte ve správném formátu.
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="password">Heslo:</label>
+            <input #password type="password" id="password" formControlName="password" class="form-control" placeholder="Zadejte heslo" autocomplete="off" >
+            <small *ngIf="registerForm.controls['password'].touched && !registerForm.controls['password'].valid" class="text-danger">
+                Heslo musí mít číslici, malé a velké písmeno a délku alespoň 8 znaků.
+            </small>
+            <input #passwordConfirm type="password" id="passwordConfirm" formControlName="passwordConfirm" class="form-control mt-2" placeholder="Zadejte heslo znovu" autocomplete="off" >
+            <small *ngIf="registerForm.controls['passwordConfirm'].touched && !registerForm.controls['passwordConfirm'].valid" class="text-danger">
+                Heslo musí odpovídat předešlému.
+            </small>
+        </div>
+        <div class="flex-column col-sm">
+            <div class="mx-auto w-50">
+                <button class="btn btn-primary my-2 w-100" type="submit" (click)="register()" [disabled]="!registerForm.valid">Registrovat se</button>
+            </div>
+            <div class="mx-auto w-50">
+                <button class="btn btn-secondary my-2 w-100" type="button" routerLink="/login">Přihlásit se</button>
+            </div>
+        </div>
+    </form>
+</div>

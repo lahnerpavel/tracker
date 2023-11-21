@@ -1,0 +1,30 @@
+<form *ngIf="vehicle !== null" #formRef="ngForm">
+    <div class="form-group">
+        <label for="brand">Značka:</label>
+        <input #brand="ngModel" type="text" [(ngModel)]="vehicle.brand" minlength="3" required name="brand"
+            class="form-control" id="brand" placeholder="Zadejte značku">
+        <small *ngIf="formRef.touched && brand.invalid" class="text-danger">
+            Značka musí obsahovat alespoň 3 znaky.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="model">Model:</label>
+        <input #model="ngModel" type="text" [(ngModel)]="vehicle.model" minlength="3" required name="model"
+            class="form-control" id="model" placeholder="Zadejte model">
+        <small *ngIf="formRef.touched && model.invalid" class="text-danger">
+            Model musí obsahovat alespoň 3 znaky.
+        </small>
+    </div>
+    <div class="form-group">
+        <label for="registrationNumber">Registrační číslo:</label>
+        <input #registrationNumber="ngModel" type="text" [(ngModel)]="vehicle.registrationNumber" minlength="3" required
+            name="registrationNumber" class="form-control" id="registrationNumber"
+            placeholder="Zadejte registrační číslo">
+        <small *ngIf="formRef.touched && registrationNumber.invalid" class="text-danger">
+            Registrační číslo musí obsahovat alespoň 3 znaky.
+        </small>
+    </div>
+    
+    <!-- Další vlastnosti vozidla můžete přidat zde -->
+
+</form>

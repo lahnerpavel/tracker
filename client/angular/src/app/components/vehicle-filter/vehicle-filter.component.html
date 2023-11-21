@@ -1,0 +1,24 @@
+<form #filterFormRef="ngForm">
+    <div class="form-group">
+        <label for="vehicleBrandFilter">Tovární značka:</label>
+        <input [(ngModel)]="vehicleFilter.brand" name="brand" type="text" class="form-control" id="vehicleBrandFilter"
+            placeholder="Zadejte značku">
+    </div>
+    <div class="form-group">
+        <label for="vehicleModelFilter">Model:</label>
+        <input [(ngModel)]="vehicleFilter.model" name="model" type="text" class="form-control" id="vehicleModelFilter"
+            placeholder="Zadejte model">
+    </div>
+    <div class="form-group">
+        <label for="vehicleRegistrationNumberFilter">SPZ:</label>
+        <input [(ngModel)]="vehicleFilter.registrationNumber" name="registrationNumber" type="text" class="form-control"
+            id="vehicleRegistrationNumberFilter" placeholder="Zadejte SPZ">
+    </div>
+    <div class="form-group">
+        <label for="vehicleLimit">Max. počet výsledků:</label>
+        <input [(ngModel)]="vehicleFilter.limit" name="limit" type="number" minlength="1" required class="form-control"
+            id="vehicleLimit" placeholder="Zadejte limit">
+    </div>
+    <button [disabled]="!filterFormRef.valid" type="button" class="btn btn-secondary"
+        (click)="onFilter.emit()">Filtrovat</button>
+</form>
