@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tracker.Api.Interfaces;
 using Tracker.Api.Models;
 //using Tracker.Data.Models;
@@ -34,6 +35,7 @@ namespace Tracker.Api.Controllers
             return Ok(vehicle);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost("vehicles")]
         public IActionResult AddVehicle([FromBody] VehicleDto vehicle)
         {
@@ -41,6 +43,7 @@ namespace Tracker.Api.Controllers
             return CreatedAtAction(nameof(GetVehicle), new { vehicleId = createdVehicle.VehicleId }, createdVehicle);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut("vehicles/{vehicleId}")]
         public IActionResult EditVehicle(uint vehicleId, [FromBody] VehicleDto vehicle)
         {
@@ -52,6 +55,7 @@ namespace Tracker.Api.Controllers
             return Ok(updatedVehicle);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("vehicles/{vehicleId}")]
         public IActionResult DeleteVehicle(uint vehicleId)
         {
