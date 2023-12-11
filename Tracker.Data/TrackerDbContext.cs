@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Tracker.Data.Models;
 
+
 namespace Tracker.Data
 {
     public class TrackerDbContext : IdentityDbContext
@@ -20,10 +21,12 @@ namespace Tracker.Data
         {
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.UseUtcDateTime();
 
             modelBuilder
                 .Entity<Movie>()
@@ -59,7 +62,7 @@ namespace Tracker.Data
                 {
                     PersonId = 1,
                     Name = "George Lucas",
-                    BirthDate = new DateTime(1944, 4, 15),
+                    BirthDate = new DateTime(1944, 4, 15, 0, 0, 0, DateTimeKind.Utc),
                     Country = "USA",
                     Biography = "Vlastním jménem George Walton Lucas, Jr. se narodil 14. května 1944 v Modestu, Kalifornii. Zde také vystudoval proslulou University of Southern California (USC)...",
                     Role = PersonRole.Director
@@ -68,7 +71,7 @@ namespace Tracker.Data
                 {
                     PersonId = 2,
                     Name = "Irvin Kershner",
-                    BirthDate = new DateTime(1923, 4, 29),
+                    BirthDate = new DateTime(1923, 4, 29, 0, 0, 0, DateTimeKind.Utc),
                     Country = "USA",
                     Biography = "Irvin Kershner se narodil ve Filadelfii rodičům židovského původu. Jeho uměleckým zaměřením bylo zpočátku hraní na hudební nástroje...",
                     Role = PersonRole.Director
@@ -77,11 +80,12 @@ namespace Tracker.Data
                 {
                     PersonId = 3,
                     Name = "Harrison Ford",
-                    BirthDate = new DateTime(1942, 7, 13),
+                    BirthDate = new DateTime(1942, 7, 13, 0, 0, 0, DateTimeKind.Utc),
                     Country = "USA",
                     Biography = "Harrison vyrůstal na Chicagském předměstí, kde jeho otec pracoval jako reklamní manažer. Po střední škole začal Harrison studovat filozofii...",
                     Role = PersonRole.Actor
-                });
+                }
+            );
 
             modelBuilder.Entity<Genre>().HasData(
                 new Genre { GenreId = 1, Name = "sci-fi" },
@@ -89,7 +93,8 @@ namespace Tracker.Data
                 new Genre { GenreId = 3, Name = "action" },
                 new Genre { GenreId = 4, Name = "romantic" },
                 new Genre { GenreId = 5, Name = "animated" },
-                new Genre { GenreId = 6, Name = "comedy" });
+                new Genre { GenreId = 6, Name = "comedy" }
+            );
 
             modelBuilder.Entity<Vehicle>().HasData(
                 new Vehicle { VehicleId = 1, Brand = "Ford", Model = "Focus", RegistrationNumber = "ABC-123" },
@@ -99,10 +104,65 @@ namespace Tracker.Data
             );
 
             modelBuilder.Entity<VehicleLocation>().HasData(
-                new VehicleLocation { LocationId = 1, VehicleId = 1, Latitude = 48.8588443, Longitude = 2.2943506, Timestamp = DateTime.Now },
-                new VehicleLocation { LocationId = 2, VehicleId = 2, Latitude = 34.052235, Longitude = -118.243683, Timestamp = DateTime.Now }
+                new VehicleLocation { LocationId = 1, VehicleId = 1, Latitude = 48.8588443, Longitude = 2.2943506, Timestamp = DateTime.UtcNow },
+                new VehicleLocation { LocationId = 2, VehicleId = 2, Latitude = 34.052235, Longitude = -118.243683, Timestamp = DateTime.UtcNow }
             );
 
         }
+
+        private void ConfigureUtcDateTime(ModelBuilder modelBuilder)
+        {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        // Zde je specifická syntaxe pro PostgreSQL
+                        property.SetColumnType("timestamp with time zone");
+                    }
+                }
+            }
+        }
+
     }
+
+    public static class ModelBuilderExtensions
+    {
+        public static void UseUtcDateTime(this ModelBuilder modelBuilder)
+        {
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetColumnType("timestamp with time zone");
+                    }
+                }
+            }
+        }
+
+    }
+
+    public static class DateTimeExtensions
+    {
+        public static DateTime? SetKindUtc(this DateTime? dateTime)
+        {
+            if (dateTime.HasValue)
+            {
+                return dateTime.Value.SetKindUtc();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public static DateTime SetKindUtc(this DateTime dateTime)
+        {
+            if (dateTime.Kind == DateTimeKind.Utc) { return dateTime; }
+            return DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+        }
+    }
+
 }

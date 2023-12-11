@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Tracker.Api;
 using Tracker.Api.Interfaces;
@@ -10,14 +9,21 @@ using Tracker.Data.Interfaces;
 using Tracker.Data.Repositories;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using static System.Net.WebRequestMethods;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("LocalTrackerConnection");
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+/*var connectionString = builder.Configuration.GetConnectionString("LocalTrackerConnection");
 builder.Services.AddDbContext<TrackerDbContext>(options =>
     options.UseSqlServer(connectionString)
+        .UseLazyLoadingProxies()
+        .ConfigureWarnings(x => x.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning)));*/
+
+var connectionString = builder.Configuration.GetConnectionString("TrackerConnection");
+builder.Services.AddDbContext<TrackerDbContext>(options =>
+    options.UseNpgsql(connectionString)
         .UseLazyLoadingProxies()
         .ConfigureWarnings(x => x.Ignore(CoreEventId.LazyLoadOnDisposedContextWarning)));
 

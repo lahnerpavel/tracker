@@ -11,7 +11,7 @@ namespace Tracker.Api.Models
         [JsonPropertyName("vehicleID")]
         public uint VehicleId { get; set; }
 
-        public DateTime Timestamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
 
         public double Latitude { get; set; }
 
